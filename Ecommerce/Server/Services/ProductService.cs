@@ -1,4 +1,6 @@
-﻿namespace Ecommerce.Server.Services
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Ecommerce.Server.Services
 {
     public class ProductService : IProductService
     {
@@ -31,6 +33,17 @@
             {
                 response.Data = product;
             }
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<Product>>> GetProductsByCategory(string categoryUrl)
+        {
+            var response = new ServiceResponse<List<Product>>
+            {
+                Data = await db.Products
+                    .Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower())) 
+                    .ToListAsync()
+            };
             return response;
         }
     }
